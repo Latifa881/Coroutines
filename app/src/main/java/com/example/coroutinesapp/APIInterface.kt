@@ -7,5 +7,5 @@ import retrofit2.http.Headers
 interface APIInterface {
     @Headers("Content-Type: application/json")
     @GET("advice")
-    fun doGetListResources(): Call<advices>?
+    fun doGetListResources(): Call<Advices>?
 }

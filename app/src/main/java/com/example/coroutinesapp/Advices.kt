@@ -1,7 +1,7 @@
 package com.example.coroutinesapp
 import com.google.gson.annotations.SerializedName
 
-class advices {
+class Advices {
 
     @SerializedName("slip")
     var slip: Advices? = null

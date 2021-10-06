@@ -9,13 +9,13 @@ import android.widget.Toast
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import okhttp3.Dispatcher
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 class MainActivity : AppCompatActivity() {
     lateinit var tvRandomAdvice: TextView
     lateinit var btAdvice: ImageButton
+    var advices:Advices?=null
 
 
 
@@ -27,40 +27,38 @@ class MainActivity : AppCompatActivity() {
         btAdvice = findViewById(R.id.btAdvice)
         btAdvice.setOnClickListener {
             CoroutineScope(IO).launch {
+                val advice = async {
+                    getAdvice()
 
-                val advice=getAdvice()
+                }.await()
+                if (advice!=null)
+                {
+                    setAdvice()
 
-                withContext(Main){
-                    tvRandomAdvice.text=advice
                 }
-            }
 
+
+            }
         }
     }
-    private suspend fun getAdvice():String{
-        var advice=""
+    private fun getAdvice():Boolean{
         val apiInterface = APIClient().getClient()?.create(APIInterface::class.java)
-        val call: Call<advices>? = apiInterface!!.doGetListResources()
-        call?.enqueue(object : Callback<advices?> {
-            override fun onResponse(
-                call: Call<advices?>?,
-                response: Response<advices?>
-            ) {
-               // Log.d("TAG", response.code().toString() + "")
-                val resource: advices? = response.body()
-                val randomAdvice = resource?.slip
-                advice = randomAdvice?.advice?.toString().toString()
+        val call: Call<Advices>? = apiInterface!!.doGetListResources()
+       try {
+           advices=call?.execute()?.body()
+       }catch (e:Exception)
+       {
+           Toast.makeText(applicationContext, "" + e.message, Toast.LENGTH_SHORT).show()
+           call?.cancel()
+       }
 
-               // tvRandomAdvice.text=randomAdvice?.advice?.toString()
+        return true
+    }
+    private suspend fun setAdvice(){
+        withContext(Main){
 
-            }
+            tvRandomAdvice.text=advices?.slip?.advice.toString()
+        }
 
-
-            override fun onFailure(call: Call<advices?>, t: Throwable?) {
-                advice="Something went wrong :("
-                call.cancel()
-            }
-        })
-        return advice
     }
 }
