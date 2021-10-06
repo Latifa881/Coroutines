@@ -18,12 +18,23 @@
         android:layout_weight="2"
         android:text="Your Advice!"
         android:textSize="30dp" />
-
-    <ImageButton
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="horizontal">
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/btAdvice"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center"
+        android:src="@drawable/advice" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/btPause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/advice"
-        android:src="@drawable/advice" />
+        android:src="@drawable/pause_gif" />
+</LinearLayout>
 </LinearLayout>
